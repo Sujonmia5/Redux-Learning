@@ -3,6 +3,11 @@ const CounterEl = document.getElementById('counter');
 const IncrementEl = document.getElementById('increment')
 const DecrementEl = document.getElementById('decrement')
 
+//Action Types
+const INCREMENT = 'increment';
+const DECREMENT = 'decrement';
+
+
 //initialState
 const initialState = {
     value: 0
@@ -10,16 +15,16 @@ const initialState = {
 
 // Reducer Function
 function reduxReducer(state = initialState, action) {
-    if (action.type === 'increment') {
+    if (action.type === INCREMENT) {
         return {
             ...state,
-            value: state.value + 1
+            value: state.value + action.payload
         }
     }
-    else if (action.type === 'decrement' && state.value > 0) {
+    else if (action.type === DECREMENT) {
         return {
             ...state,
-            value: state.value - 1
+            value: state.value - action.payload
         }
     }
     else {
@@ -30,22 +35,33 @@ function reduxReducer(state = initialState, action) {
 // Redux Store
 const store = Redux.createStore(reduxReducer)
 
+// UI Render
 const render = () => {
     const state = store.getState()
     CounterEl.innerText = state.value;
 }
 render()
-
 store.subscribe(render)
+
 
 // EventListener
 IncrementEl.addEventListener('click', () => {
-    store.dispatch({
-        type: 'increment'
-    })
+    store.dispatch(IncrementAction(5))
 })
 DecrementEl.addEventListener('click', () => {
-    store.dispatch({
-        type: 'decrement'
-    })
+    store.dispatch(decrementAction(2))
 })
+
+// Dispatch Function
+const IncrementAction = (value) => {
+    return {
+        type: INCREMENT,
+        payload: value
+    }
+}
+const decrementAction = (value) => {
+    return {
+        type: DECREMENT,
+        payload: value
+    }
+}
